@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Key finder</title>
+<style type="text/css">
+  #load { height:6vh; vertical-align:middle; font-size:large; background-color:white; color:black; border:1px solid black; padding:10px; display:table-cell; overflow:hidden; position:relative }
+  #load.drop { background-color:black; color:white }
+  #load.drop * { pointer-events:none }
+  #log { margin: 10px }
+  #load input { width:0; height:0; position:absolute; top:-1000px }
+  #load:hover { background-color: black; color:white }
+</style>
+</head>
+<body>
+
+<h1>Key finder in JavaScript</h1>
+
+<p>
+  <label id="load">
+    <input type="file" id="selector">
+    <span>Drag and drop SOFTWARE registry hive file here, or click for file selector</span>
+  </label>
+</p>
+
+<div id="log"></div>
+
+<script src="js/pkeyjs-bundle.js"></script>
+

@@ -1,0 +1,21 @@
+{
+  "name": "pkeyjs",
+  "version": "1.0.0",
+  "description": "Extract Windows product key from registry hive file",
+  "author": "pp@siedziba.pl",
+  "license": "MIT",
+  "dependencies": {
+    "jbinary": "^2.1.3"
+  },
+  "devDependencies": {
+    "browserify": "^14.4.0",
+    "exorcist": "^0.4.0",
+    "minimist": "^1.2.0",
+    "uglifyify": "^4.0.2",
+    "watchify": "^3.9.0"
+  },
+  "scripts": {
+    "build": "node package-build.js",
+    "watch": "node package-build.js --watch"
+  }
+}
