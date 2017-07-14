@@ -1,20 +1,20 @@
 'use strict'
 
-let build_dir = 'js'
-let out_file = build_dir + '/pkeyjs-bundle.js'
-let argv = require('minimist')(process.argv.slice(2))
-let browserify = require('browserify')
-let fs = require('fs')
-let exorcist = require('exorcist')
+const build_dir = 'js'
+const out_file = build_dir + '/pkeyjs-bundle.js'
+const argv = require('minimist')(process.argv.slice(2))
+const browserify = require('browserify')
+const fs = require('fs')
+const exorcist = require('exorcist')
 
-let bundler_args = {debug: true, entries: ['src/main.js']}
+const bundler_args = {debug: true, entries: ['src/main.js']}
 if (argv.watch) {
-  let watchify = require('watchify')
+  const watchify = require('watchify')
   bundler_args.cache = {}
   bundler_args.packageCache = {}
   bundler_args.plugin = [watchify]
 }
-let bundler = browserify(bundler_args)
+const bundler = browserify(bundler_args)
 if (!argv.debug) bundler.transform({global: true}, 'uglifyify')
 
 function bundle() {
