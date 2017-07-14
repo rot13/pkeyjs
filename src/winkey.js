@@ -28,6 +28,7 @@ module.exports = function findWindowsKey(registry_key) {
 }
 
 // Convert Windows product key to human readable form
+// CAUTION: input array is modified by this function!
 
 function decodeProductId(data) {
   let digits = 'BCDFGHJKMPQRTVWXY2346789'
