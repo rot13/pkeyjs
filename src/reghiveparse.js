@@ -2,8 +2,8 @@
 
 // Registry hive parsing
 
-let jBinary = require('jbinary')
-let offset_to_first_hbin = 0x1000
+const jBinary = require('jbinary')
+const offset_to_first_hbin = 0x1000
 
 function hiveTypeSet(codepage = 'cp1252') {
   return {
@@ -31,7 +31,7 @@ function hiveTypeSet(codepage = 'cp1252') {
       _padding: ['skip', function() { return 508 - this.binary.tell() }],
       checksum: 'uint32',
       _realChecksum: function() {
-        let dwords = this.binary.read(['array', 'uint32', 127], 0)
+        const dwords = this.binary.read(['array', 'uint32', 127], 0)
         let checksum = 0
         for(let dword of dwords) checksum ^= dword
         return checksum
@@ -122,7 +122,7 @@ function hiveTypeSet(codepage = 'cp1252') {
     },
     KeyListEntries: jBinary.Template({
       read: function(context) {
-        let a = []
+        const a = []
         for(let n = 0; n < context.number_of_entries; n++) a.push(this.binary.read(context._magic.toUpperCase()))
         return a
       },
@@ -197,19 +197,19 @@ function hiveTypeSet(codepage = 'cp1252') {
     ValueData: jBinary.Template({
       read: function(context) {
         this.binary.seek(context.offset_to_data + offset_to_first_hbin)
-        let hdr = this.binary.read('ValueDataHdr')
+        const hdr = this.binary.read('ValueDataHdr')
         if (context.data_length > hdr.length) {
 
           // Code to read large values
           // TODO: test if this works
 
-          let blhdr = this.binary.read('ValueDataBlockListHdr')
+          const blhdr = this.binary.read('ValueDataBlockListHdr')
           this.binary.seek(blhdr.offset_to_data_block_list + offset_to_first_hbin + 4)
-          let offsets = this.binary.read(['array', 'uint32', blhdr.num_data_blocks])
+          const offsets = this.binary.read(['array', 'uint32', blhdr.num_data_blocks])
           let data = []
           for(let offset of offsets) {
             this.binary.seek(offset + offset_to_first_hbin)
-            let bhdr = this.binary.read('ValueDataBlockHdr')
+            const bhdr = this.binary.read('ValueDataBlockHdr')
             data = data.concat(this.binary.read(['array', 'uint8', bhdr.length - 8]))
           }
           return data
@@ -237,33 +237,33 @@ function hiveTypeSet(codepage = 'cp1252') {
 }
 
 module.exports = function parseHive(buf) {
-  let typeSet = hiveTypeSet()
-  let hiveParser = new jBinary(buf, typeSet)
-  let hive = hiveParser.readAll()
+  const typeSet = hiveTypeSet()
+  const hiveParser = new jBinary(buf, typeSet)
+  const hive = hiveParser.readAll()
 
   // Functions for reading values and subkeys
   // TODO: can we move them inside typeSet but somehow execute on-access,
   //       so it doesn't parse the whole registry at once?
   // TODO: add a function to get key / value by name instead of enumerating them all
 
-  let values = (key) => {
+  const values = (key) => {
     if (key.number_of_values === 0) return
-    let list = []
-    let offsets = hiveParser.read('ValueOffsetsList', key.offset_to_value_list + offset_to_first_hbin)
+    const list = []
+    const offsets = hiveParser.read('ValueOffsetsList', key.offset_to_value_list + offset_to_first_hbin)
     for(let offset of offsets.items) {
       list.push(hiveParser.read('Value', offset + offset_to_first_hbin))
     }
     return list
   }
 
-  let subkeys = (key, list = []) => {
-    let keylist = hiveParser.read('KeyList', key.offset_to_subkey_list + offset_to_first_hbin)
+  const subkeys = (key, list = []) => {
+    const keylist = hiveParser.read('KeyList', key.offset_to_subkey_list + offset_to_first_hbin)
     for(let el of keylist.entries) {
       // Found another list, enumerate recursively
       if ('offset_to_subkey_list' in el) subkeys(el, list)
       // Found key, read it
       else if ('offset_to_key' in el) {
-        let key = hiveParser.read('Key', el.offset_to_key + offset_to_first_hbin)
+        const key = hiveParser.read('Key', el.offset_to_key + offset_to_first_hbin)
 
         key.subkeys = () => subkeys(key)
         key.values = () => values(key)

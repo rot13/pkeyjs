@@ -1,13 +1,13 @@
 (function() {
   'use strict'
 
-  let parseHive = require('./reghiveparse.js')
-  let findWindowsKey = require('./winkey.js')
+  const parseHive = require('./reghiveparse.js')
+  const findWindowsKey = require('./winkey.js')
 
   // GUI
 
   function logAdd(text = '') {
-    let div = document.createElement('div')
+    const div = document.createElement('div')
     document.getElementById('log').appendChild(div)
     div.textContent = text
     return div
@@ -16,10 +16,10 @@
   function fileHandler(e) {
     e.preventDefault()
     e.target.classList.remove('drop')
-    let files = e.target.files || e.dataTransfer.files
+    const files = e.target.files || e.dataTransfer.files
     for(let file of files) {
-      let loading = logAdd("Loading file")
-      let reader = new FileReader()
+      const loading = logAdd("Loading file")
+      const reader = new FileReader()
       reader.onload = e => {
         logAdd("Parsing file")
         let hive
@@ -34,7 +34,7 @@
 
         logAdd("Searching for Windows key")
         try {
-          let key = findWindowsKey(hive.root_key)
+          const key = findWindowsKey(hive.root_key)
           if (key) {
             logAdd("Found Windows key: "+key)
           } else {
@@ -58,7 +58,7 @@
     }
   }
 
-  let loadbtn = document.getElementById('load')
+  const loadbtn = document.getElementById('load')
   loadbtn.addEventListener('dragenter', e => loadbtn.classList.add('drop'))
   loadbtn.addEventListener('dragleave', e => loadbtn.classList.remove('drop'))
   loadbtn.addEventListener('dragover', e => {
