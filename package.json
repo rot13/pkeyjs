@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Extract Windows product key from registry hive file",
   "author": "pp@siedziba.pl",
-  "license": "MIT",
+  "license": "unlicense",
   "dependencies": {
     "jbinary": "^2.1.3"
   },
